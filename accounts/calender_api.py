@@ -101,7 +101,8 @@ def get_calender_events(technician,event_count=1000,timeMin=None,timeMax=None):
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
     today = datetime.datetime.now()
     start = datetime.datetime(today.year, today.month, today.day - 1, tzinfo=tz.tzutc()).isoformat()
-    max_time = datetime.datetime(today.year, today.month, today.day + 11, tzinfo=tz.tzutc()).isoformat()
+    after_10_days = today.date()+datetime.timedelta(days=11)
+    max_time = datetime.datetime(after_10_days.year, after_10_days.month, after_10_days.day + 11, tzinfo=tz.tzutc()).isoformat()
 
     if timeMax:
         events_result = service.events().list(calendarId='primary', timeMin=start,timeMax=max_time,
@@ -242,7 +243,7 @@ def get_current_address(events, customer):
                     if next_event:
                         time_gap = next_start - end
                         time_gap = time_gap.seconds/(60)
-                        if int(customer.time_for_job) > int(time_gap):
+                        if int(customer.time_for_job) <= int(time_gap):
                             current_address = next_current_address
                             break
                         else:
@@ -262,7 +263,7 @@ def get_current_address(events, customer):
                     elif previous_summery.lower() == 'break':
                         time_gap = next_start - previous_end
                         time_gap = time_gap.seconds / (60)
-                        if int(customer.time_for_job) > int(time_gap):
+                        if int(customer.time_for_job) <= int(time_gap):
                             current_address = next_current_address
                             break
                         else:
@@ -308,7 +309,7 @@ def get_current_address_date(events, customer,current_date,time):
                     if next_event:
                         time_gap = next_start - end
                         time_gap = time_gap.seconds/(60)
-                        if int(customer.time_for_job) > int(time_gap):
+                        if int(customer.time_for_job) <= int(time_gap):
                             current_address = next_current_address
                             break
                         else:
@@ -327,7 +328,7 @@ def get_current_address_date(events, customer,current_date,time):
 
                             time_gap = next_start - previous_end
                             time_gap = time_gap.seconds / (60)
-                            if int(customer.time_for_job) > int(time_gap):
+                            if int(customer.time_for_job) <= int(time_gap):
                                 current_address = previous_current_address
                                 break
                         else:
@@ -336,7 +337,7 @@ def get_current_address_date(events, customer,current_date,time):
                     elif previous_summery.lower() == 'break':
                         time_gap = next_start - previous_end
                         time_gap = time_gap.seconds / (60)
-                        if int(customer.time_for_job) > int(time_gap):
+                        if int(customer.time_for_job) <= int(time_gap):
                             current_address = next_current_address
                             break
                         else:
